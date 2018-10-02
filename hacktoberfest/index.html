@@ -1,4 +1,18 @@
 <html>
+  <script>
+    var author = "teo-shaowei";
+    var year = 2018;
+    var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            document.getElementById("prnow").innerHTML = results.total_count
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+  </script>
 <style>
   .background {
       background: url("prata.jpg") no-repeat center;
@@ -15,7 +29,8 @@
       justify-content: center;
       color: black;
   }
-  .prnow {
+
+  #prnow {
       color: red;
   }
 
@@ -36,7 +51,7 @@
         <h1>Bozz's Hacktoberfest<h1>
       </div>
       <div class="aligner">
-        <h2 class="prnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
+        <h2 id="prnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
       </div>
     </div>
 </html>
