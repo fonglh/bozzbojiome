@@ -1,17 +1,63 @@
 <html>
   <script>
-    var author = "teo-shaowei";
+    var ghUsers = ["teo-shaowei", "fonglh", "cflee", "abeltay", "naomilwx", "jchiam", "jeremyyap", "wongherlung", "xeluna"]
     var year = 2018;
-    var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var results = JSON.parse(this.responseText);
-            document.getElementById("prnow").innerHTML = results.total_count
+
+    // Init userData hash
+    var userData = {};
+    ghUsers.forEach(function(author) {
+        userData[author] = { 'name': '', 'avatarURL': '', 'prCount': 0 };
+    });
+
+    ghUsers.forEach(function(author) {
+        var userXmlHttp = new XMLHttpRequest();
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var results = JSON.parse(this.responseText);
+                userData[author]['prCount'] = results.total_count;
+            }
+        };
+        userXmlHttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var results = JSON.parse(this.responseText);
+                userData[author]['name'] = results.name;
+                userData[author]['avatarURL'] = results.avatar_url;
+            }
         }
+
+        var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
+        var userUrl = `https://api.github.com/users/${author}`;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        userXmlHttp.open("GET", userUrl, true);
+        userXmlHttp.send();
+    });
+    window.onload = function(e) {
+        // Test data to prevent hitting GitHub rate limits while testing.
+        /*userData['teo-shaowei']['prCount'] = 5;
+        userData['teo-shaowei']['name'] = 'Teo ShaoWei';
+        userData['teo-shaowei']['avatarURL'] = 'https://avatars3.githubusercontent.com/u/6925907?v=4';*/
+
+        // TODO: Replace with JS Promises.
+        setTimeout(function() {
+            document.getElementById("bozzprnow").innerHTML = userData['teo-shaowei']['prCount'];
+
+            table = document.getElementById("leaderboard");
+            ghUsers.forEach(function(author) {
+                row = table.insertRow();
+                cell = row.insertCell();
+                var avatarImg = document.createElement("img");
+                avatarImg.src = userData[author]['avatarURL'];
+                cell.appendChild(avatarImg);
+                cell = row.insertCell();
+                cell.appendChild(document.createTextNode(userData[author]['name']));
+                cell = row.insertCell();
+                cell.appendChild(document.createTextNode(userData[author]['prCount']));
+            });
+
+        }, 3000);
     };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
   </script>
 <style>
   .background {
@@ -30,28 +76,39 @@
       color: black;
   }
 
-  #prnow {
+  #bozzprnow {
       color: red;
   }
 
+  img {
+      width: 30px;
+      height: 30px;
+  }
+
   h1 {
-      font-size: 120px;
+      font-size: 100px;
   }
 
   h2 {
-      font-size: 100px;
+      font-size: 80px;
   }
 
   h3 {
       font-size: 50px;
   }
 </style>
+<body>
     <div class="background">
       <div class="aligner">
         <h1>Bozz's Hacktoberfest<h1>
       </div>
       <div class="aligner">
-        <h2 id="prnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
+        <h2 id="bozzprnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
+      </div>
+      <div>
+          <table id="leaderboard">
+          </table>
       </div>
     </div>
+</body>
 </html>
