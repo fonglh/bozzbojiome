@@ -21,7 +21,7 @@
         userXmlHttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var results = JSON.parse(this.responseText);
-                userData[author]['name'] = results.name;
+                userData[author]['name'] = results.name ? results.name : author;
                 userData[author]['avatarURL'] = results.avatar_url;
             }
         }
