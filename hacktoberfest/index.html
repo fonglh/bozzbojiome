@@ -34,14 +34,15 @@
         userXmlHttp.send();
     });
     window.onload = function(e) {
-        // Test data to prevent hitting GitHub rate limits while testing.
-        /*userData['teo-shaowei']['prCount'] = 5;
-        userData['teo-shaowei']['name'] = 'Teo ShaoWei';
-        userData['teo-shaowei']['avatarURL'] = 'https://avatars3.githubusercontent.com/u/6925907?v=4';*/
         var bozzName = 'teo-shaowei';
+        // Test data to prevent hitting GitHub rate limits while testing.
+        // userData[bozzName]['prCount'] = 5;
+        // userData[bozzName]['name'] = 'Teo ShaoWei';
+        // userData[bozzName]['avatarURL'] = 'https://avatars3.githubusercontent.com/u/6925907?v=4';
 
         // TODO: Replace with JS Promises.
         setTimeout(function() {
+            document.getElementById("bozzPhoto").setAttribute("src", userData[bozzName]['avatarURL']);
             document.getElementById("bozzprnow").innerHTML = userData[bozzName]['prCount'];
 
             table = document.getElementById("leaderboard");
@@ -89,13 +90,17 @@
       color: black;
   }
 
+  #bozzPhoto {
+      width: 200px;
+      height: 200px;
+  }
+
   #bozzprnow {
       color: red;
   }
 
   #leaderboard {
-      margin-left: auto;
-      margin-right: auto;
+      margin: 40px auto;
       font-size: 20px;
   }
 
@@ -114,16 +119,21 @@
 
   h2 {
       font-size: 70px;
+      margin: 0;
   }
 
   h3 {
       font-size: 40px;
+      margin: 0;
   }
 </style>
 <body>
     <div class="background">
       <div class="aligner">
         <h1>ESTL Hacktoberfest<h1>
+      </div>
+      <div class="aligner">
+          <img id="bozzPhoto" alt="bozzPhoto" />
       </div>
       <div class="aligner">
         <h2 id="bozzprnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
