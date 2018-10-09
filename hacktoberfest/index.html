@@ -9,30 +9,37 @@
         userData[author] = { 'name': '', 'avatarURL': '', 'prCount': 0 };
     });
 
-    ghUsers.forEach(function(author) {
-        var userXmlHttp = new XMLHttpRequest();
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var results = JSON.parse(this.responseText);
-                userData[author]['prCount'] = results.total_count;
+    function fetchData() {
+        ghUsers.forEach(function(author) {
+            var userXmlHttp = new XMLHttpRequest();
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var results = JSON.parse(this.responseText);
+                    userData[author]['prCount'] = results.total_count;
+                }
+            };
+            userXmlHttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var results = JSON.parse(this.responseText);
+                    userData[author]['name'] = results.name ? results.name : author;
+                    userData[author]['avatarURL'] = results.avatar_url;
+                }
             }
-        };
-        userXmlHttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var results = JSON.parse(this.responseText);
-                userData[author]['name'] = results.name ? results.name : author;
-                userData[author]['avatarURL'] = results.avatar_url;
-            }
-        }
 
-        var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
-        var userUrl = `https://api.github.com/users/${author}`;
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
-        userXmlHttp.open("GET", userUrl, true);
-        userXmlHttp.send();
-    });
+            var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
+            var userUrl = `https://api.github.com/users/${author}`;
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+            userXmlHttp.open("GET", userUrl, true);
+            userXmlHttp.send();
+        });
+    }
+
+    // fetch data every hour
+    fetchData();
+    setInterval(fetchData, 60 * 60 * 1000);
+
     window.onload = function(e) {
         // Test data to prevent hitting GitHub rate limits while testing.
         /*userData['teo-shaowei']['prCount'] = 5;
