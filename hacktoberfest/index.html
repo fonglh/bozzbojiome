@@ -65,15 +65,19 @@
                 })
                 .forEach(function(author) {
                     if (author !== bozzName) {
-                        row = table.insertRow();
-                        cell = row.insertCell();
-                        var avatarImg = document.createElement("img");
-                        avatarImg.src = userData[author]['avatarURL'];
-                        cell.appendChild(avatarImg);
-                        cell = row.insertCell();
-                        cell.appendChild(document.createTextNode(userData[author]['name']));
-                        cell = row.insertCell();
-                        cell.appendChild(document.createTextNode(userData[author]['prCount']));
+                      row = table.insertRow();
+                      cell = row.insertCell();
+                      var avatarImg = document.createElement("img");
+                      avatarImg.src = userData[author]['avatarURL'];
+                      cell.appendChild(avatarImg);
+                      cell = row.insertCell();
+                      var a = document.createElement('a');
+                      a.setAttribute('class', 'author-name');
+                      a.setAttribute('href', `https://hacktoberfest.digitalocean.com/stats/${author}`);
+                      a.appendChild(document.createTextNode(userData[author]['name']));
+                      cell.appendChild(a);
+                      cell = row.insertCell();
+                      cell.appendChild(document.createTextNode(userData[author]['prCount']));
                     }
                 });
 
@@ -132,6 +136,11 @@
   h3 {
       font-size: 40px;
       margin: 0;
+  }
+
+  .author-name {
+    text-decoration: none;
+    color: black;
   }
 </style>
 <body>
