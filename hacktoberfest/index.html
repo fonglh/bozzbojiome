@@ -50,7 +50,8 @@
         // TODO: Replace with JS Promises.
         setTimeout(function() {
             document.getElementById("bozzPhoto").setAttribute("src", userData[bozzName]['avatarURL']);
-            document.getElementById("bozzprnow").innerHTML = userData[bozzName]['prCount'];
+            var bozzLink = `https://hacktoberfest.digitalocean.com/stats/${bozzName}`;
+            document.getElementById("bozzprnow").innerHTML = "<a href=\"" + bozzLink + "\">" + userData[bozzName]['prCount'] + "</a>";
 
             table = document.getElementById("leaderboard");
             ghUsers
@@ -106,8 +107,10 @@
       height: 200px;
   }
 
-  #bozzprnow {
+  #bozzprnow,
+  #bozzprnow a {
       color: red;
+      text-decoration: none;
   }
 
   #leaderboard {
