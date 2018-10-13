@@ -1,4 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>ESTL Hacktoberfest</title>
   <script>
     var ghUsers = ["teo-shaowei", "fonglh", "cflee", "abeltay", "naomilwx", "jchiam", "jeremyyap", "wongherlung", "xeluna", "weelillad"]
     var year = 2018;
@@ -49,7 +53,10 @@
 
         // TODO: Replace with JS Promises.
         setTimeout(function() {
-            document.getElementById("bozzPhoto").setAttribute("src", userData[bozzName]['avatarURL']);
+            var bozzImg = document.createElement("img");
+            bozzImg.src = userData[bozzName]['avatarURL'];
+            bozzImg.alt = "bozzPhoto";
+            document.getElementById("bozzPhoto").appendChild(bozzImg);
             var bozzLink = `https://hacktoberfest.digitalocean.com/stats/${bozzName}`;
             document.getElementById("bozzprnow").innerHTML = "<a href=\"" + bozzLink + "\">" + userData[bozzName]['prCount'] + "</a>";
 
@@ -102,7 +109,7 @@
       color: black;
   }
 
-  #bozzPhoto {
+  #bozzPhoto > img {
       width: 200px;
       height: 200px;
   }
@@ -146,13 +153,13 @@
     color: black;
   }
 </style>
+</head>
 <body>
     <div class="background">
       <div class="aligner">
-        <h1>ESTL Hacktoberfest<h1>
+        <h1>ESTL Hacktoberfest</h1>
       </div>
-      <div class="aligner">
-          <img id="bozzPhoto" alt="bozzPhoto" />
+      <div class="aligner" id="bozzPhoto">
       </div>
       <div class="aligner">
         <h2 id="bozzprnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
@@ -161,7 +168,7 @@
           <table id="leaderboard">
             <thead>
               <tr>
-                <th />
+                <th></th>
                 <th>Name</th>
                 <th>PR Count</th>
               </tr>
