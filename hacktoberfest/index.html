@@ -50,7 +50,8 @@
         // TODO: Replace with JS Promises.
         setTimeout(function() {
             document.getElementById("bozzPhoto").setAttribute("src", userData[bozzName]['avatarURL']);
-            document.getElementById("bozzprnow").innerHTML = userData[bozzName]['prCount'];
+            var bozzLink = `https://hacktoberfest.digitalocean.com/stats/${bozzName}`;
+            document.getElementById("bozzprnow").innerHTML = "<a href=\"" + bozzLink + "\">" + userData[bozzName]['prCount'] + "</a>";
 
             table = document.getElementById("leaderboard");
             ghUsers
@@ -65,15 +66,19 @@
                 })
                 .forEach(function(author) {
                     if (author !== bozzName) {
-                        row = table.insertRow();
-                        cell = row.insertCell();
-                        var avatarImg = document.createElement("img");
-                        avatarImg.src = userData[author]['avatarURL'];
-                        cell.appendChild(avatarImg);
-                        cell = row.insertCell();
-                        cell.appendChild(document.createTextNode(userData[author]['name']));
-                        cell = row.insertCell();
-                        cell.appendChild(document.createTextNode(userData[author]['prCount']));
+                      row = table.insertRow();
+                      cell = row.insertCell();
+                      var avatarImg = document.createElement("img");
+                      avatarImg.src = userData[author]['avatarURL'];
+                      cell.appendChild(avatarImg);
+                      cell = row.insertCell();
+                      var a = document.createElement('a');
+                      a.setAttribute('class', 'author-name');
+                      a.setAttribute('href', `https://hacktoberfest.digitalocean.com/stats/${author}`);
+                      a.appendChild(document.createTextNode(userData[author]['name']));
+                      cell.appendChild(a);
+                      cell = row.insertCell();
+                      cell.appendChild(document.createTextNode(userData[author]['prCount']));
                     }
                 });
 
@@ -102,8 +107,10 @@
       height: 200px;
   }
 
-  #bozzprnow {
+  #bozzprnow,
+  #bozzprnow a {
       color: red;
+      text-decoration: none;
   }
 
   #leaderboard {
@@ -132,6 +139,11 @@
   h3 {
       font-size: 40px;
       margin: 0;
+  }
+
+  .author-name {
+    text-decoration: none;
+    color: black;
   }
 </style>
 <body>
