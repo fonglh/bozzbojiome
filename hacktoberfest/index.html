@@ -1,46 +1,50 @@
-<html>
-  <script>
-    var ghUsers = ["teo-shaowei", "fonglh", "cflee", "abeltay", "naomilwx", "jchiam", "jeremyyap", "wongherlung", "xeluna", "weelillad", "trangmei"]
-    var year = 2018;
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>ESTL Hacktoberfest</title>
+    <script>
+      var ghUsers = ["teo-shaowei", "fonglh", "cflee", "abeltay", "naomilwx", "jchiam", "jeremyyap", "wongherlung", "xeluna", "weelillad", "trangmei"]
+      var year = 2018;
 
-    // Init userData hash
-    var userData = {};
-    ghUsers.forEach(function(author) {
+      // Init userData hash
+      var userData = {};
+      ghUsers.forEach(function(author) {
         userData[author] = { 'name': '', 'avatarURL': '', 'prCount': 0 };
-    });
+      });
 
-    function fetchData() {
+      function fetchData() {
         ghUsers.forEach(function(author) {
-            var userXmlHttp = new XMLHttpRequest();
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var results = JSON.parse(this.responseText);
-                    userData[author]['prCount'] = results.total_count;
-                }
-            };
-            userXmlHttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var results = JSON.parse(this.responseText);
-                    userData[author]['name'] = results.name ? results.name : author;
-                    userData[author]['avatarURL'] = results.avatar_url;
-                }
+          var userXmlHttp = new XMLHttpRequest();
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var results = JSON.parse(this.responseText);
+              userData[author]['prCount'] = results.total_count;
             }
+          };
+          userXmlHttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var results = JSON.parse(this.responseText);
+              userData[author]['name'] = results.name ? results.name : author;
+              userData[author]['avatarURL'] = results.avatar_url;
+            }
+          }
 
-            var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
-            var userUrl = `https://api.github.com/users/${author}`;
-            xmlhttp.open("GET", url, true);
-            xmlhttp.send();
-            userXmlHttp.open("GET", userUrl, true);
-            userXmlHttp.send();
+          var url = `https://api.github.com/search/issues?q=created:${year}-09-30T00:00:00-12:00..${year}-10-31T23:59:59-12:00+type:pr+is:public+author:${author}`;
+          var userUrl = `https://api.github.com/users/${author}`;
+          xmlhttp.open("GET", url, true);
+          xmlhttp.send();
+          userXmlHttp.open("GET", userUrl, true);
+          userXmlHttp.send();
         });
-    }
+      }
 
-    // fetch data every hour
-    fetchData();
-    setInterval(fetchData, 60 * 60 * 1000);
+      // fetch data every hour
+      fetchData();
+      setInterval(fetchData, 60 * 60 * 1000);
 
-    window.onload = function(e) {
+      window.onload = function(e) {
         var bozzName = 'teo-shaowei';
         // Test data to prevent hitting GitHub rate limits while testing.
         // userData[bozzName]['prCount'] = 5;
@@ -49,125 +53,128 @@
 
         // TODO: Replace with JS Promises.
         setTimeout(function() {
-            document.getElementById("bozzPhoto").setAttribute("src", userData[bozzName]['avatarURL']);
-            var bozzLink = `https://hacktoberfest.digitalocean.com/stats/${bozzName}`;
-            document.getElementById("bozzprnow").innerHTML = "<a href=\"" + bozzLink + "\">" + userData[bozzName]['prCount'] + "</a>";
+          var bozzImg = document.createElement("img");
+          bozzImg.src = userData[bozzName]['avatarURL'];
+          bozzImg.alt = "bozzPhoto";
+          document.getElementById("bozzPhoto").appendChild(bozzImg);
+          var bozzLink = `https://hacktoberfest.digitalocean.com/stats/${bozzName}`;
+          document.getElementById("bozzprnow").innerHTML = "<a href=\"" + bozzLink + "\">" + userData[bozzName]['prCount'] + "</a>";
 
-            table = document.getElementById("leaderboard");
-            ghUsers
-                .sort(function(author1, author2) {
-                    if (author1 === bozzName) {
-                      return -1;
-                    }
-                    if (author2 === bozzName) {
-                      return 1;
-                    }
-                    return userData[author1]['prCount'] < userData[author2]['prCount']
-                })
-                .forEach(function(author) {
-                    if (author !== bozzName) {
-                      row = table.insertRow();
-                      cell = row.insertCell();
-                      var avatarImg = document.createElement("img");
-                      avatarImg.src = userData[author]['avatarURL'];
-                      cell.appendChild(avatarImg);
-                      cell = row.insertCell();
-                      var a = document.createElement('a');
-                      a.setAttribute('class', 'author-name');
-                      a.setAttribute('href', `https://hacktoberfest.digitalocean.com/stats/${author}`);
-                      a.appendChild(document.createTextNode(userData[author]['name']));
-                      cell.appendChild(a);
-                      cell = row.insertCell();
-                      cell.appendChild(document.createTextNode(userData[author]['prCount']));
-                    }
-                });
+          table = document.getElementById("leaderboard");
+          ghUsers
+            .sort(function(author1, author2) {
+            if (author1 === bozzName) {
+              return -1;
+            }
+            if (author2 === bozzName) {
+              return 1;
+            }
+            return userData[author1]['prCount'] < userData[author2]['prCount']
+          })
+            .forEach(function(author) {
+            if (author !== bozzName) {
+              row = table.insertRow();
+              cell = row.insertCell();
+              var avatarImg = document.createElement("img");
+              avatarImg.src = userData[author]['avatarURL'];
+              cell.appendChild(avatarImg);
+              cell = row.insertCell();
+              var a = document.createElement('a');
+              a.setAttribute('class', 'author-name');
+              a.setAttribute('href', `https://hacktoberfest.digitalocean.com/stats/${author}`);
+              a.appendChild(document.createTextNode(userData[author]['name']));
+              cell.appendChild(a);
+              cell = row.insertCell();
+              cell.appendChild(document.createTextNode(userData[author]['prCount']));
+            }
+          });
 
         }, 3000);
-    };
-  </script>
-<style>
-  .background {
-      background: url("prata.jpg") no-repeat center;
-      background-color: rgba(225,225,225,0.8);
-      background-blend-mode: lighten;
-      background-size: cover;
-      width: 100%;
-      height: 100%;
-  }
+      };
+    </script>
+    <style>
+      .background {
+        background: url("prata.jpg") no-repeat center;
+        background-color: rgba(225,225,225,0.8);
+        background-blend-mode: lighten;
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+      }
 
-  .aligner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: black;
-  }
+      .aligner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: black;
+      }
 
-  #bozzPhoto {
-      width: 200px;
-      height: 200px;
-  }
+      #bozzPhoto > img {
+        width: 200px;
+        height: 200px;
+      }
 
-  #bozzprnow,
-  #bozzprnow a {
-      color: red;
-      text-decoration: none;
-  }
+      #bozzprnow,
+      #bozzprnow a {
+        color: red;
+        text-decoration: none;
+      }
 
-  #leaderboard {
-      margin: 40px auto;
-      font-size: 20px;
-  }
+      #leaderboard {
+        margin: 40px auto;
+        font-size: 20px;
+      }
 
-  th {
-    text-align: left;
-  }
+      th {
+        text-align: left;
+      }
 
-  img {
-      width: 30px;
-      height: 30px;
-  }
+      img {
+        width: 30px;
+        height: 30px;
+      }
 
-  h1 {
-      font-size: 90px;
-  }
+      h1 {
+        font-size: 90px;
+      }
 
-  h2 {
-      font-size: 70px;
-      margin: 0;
-  }
+      h2 {
+        font-size: 70px;
+        margin: 0;
+      }
 
-  h3 {
-      font-size: 40px;
-      margin: 0;
-  }
+      h3 {
+        font-size: 40px;
+        margin: 0;
+      }
 
-  .author-name {
-    text-decoration: none;
-    color: black;
-  }
-</style>
-<body>
+      .author-name {
+        text-decoration: none;
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
     <div class="background">
       <div class="aligner">
-        <h1>ESTL Hacktoberfest<h1>
+        <h1>ESTL Hacktoberfest</h1>
       </div>
-      <div class="aligner">
-          <img id="bozzPhoto" alt="bozzPhoto" />
+      <div class="aligner" id="bozzPhoto">
       </div>
       <div class="aligner">
         <h2 id="bozzprnow">0</h2><h2>/5</h2>&nbsp;&nbsp;&nbsp;&nbsp;<h3>PRs</h3>
       </div>
       <div>
-          <table id="leaderboard">
-            <thead>
-              <tr>
-                <th />
-                <th>Name</th>
-                <th>PR Count</th>
-              </tr>
-            </thead>
-          </table>
+        <table id="leaderboard">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>PR Count</th>
+            </tr>
+          </thead>
+        </table>
       </div>
     </div>
-</body>
+  </body>
 </html>
