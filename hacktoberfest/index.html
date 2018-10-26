@@ -63,16 +63,9 @@
           table = document.getElementById("leaderboard");
           ghUsers
             .sort(function(author1, author2) {
-            if (author1 === bozzName) {
-              return -1;
-            }
-            if (author2 === bozzName) {
-              return 1;
-            }
             return userData[author1]['prCount'] < userData[author2]['prCount']
           })
             .forEach(function(author) {
-            if (author !== bozzName) {
               row = table.insertRow();
               cell = row.insertCell();
               var avatarImg = document.createElement("img");
@@ -80,13 +73,13 @@
               cell.appendChild(avatarImg);
               cell = row.insertCell();
               var a = document.createElement('a');
-              a.setAttribute('class', 'author-name');
+              var className = author == bozzName ? 'bozz-name' : 'author-name';
+              a.setAttribute('class', className);
               a.setAttribute('href', `https://hacktoberfest.digitalocean.com/stats/${author}`);
               a.appendChild(document.createTextNode(userData[author]['name']));
               cell.appendChild(a);
               cell = row.insertCell();
               cell.appendChild(document.createTextNode(userData[author]['prCount']));
-            }
           });
 
         }, 3000);

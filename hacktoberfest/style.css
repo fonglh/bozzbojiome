@@ -71,7 +71,12 @@ h3 {
   font-family: Roboto Slab, serif;
 }
 
-.author-name {
+.author-name,
+.bozz-name {
   text-decoration: none;
   color: black;
+}
+
+.bozz-name {
+  font-weight: bold;
 }
