@@ -63,8 +63,8 @@
           table = document.getElementById("leaderboard");
           ghUsers
             .sort(function(author1, author2) {
-            return userData[author1]['prCount'] < userData[author2]['prCount']
-          })
+              return userData[author1]['prCount'] < userData[author2]['prCount']
+            })
             .forEach(function(author) {
               row = table.insertRow();
               cell = row.insertCell();
